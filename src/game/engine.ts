@@ -1,5 +1,5 @@
 import { Synth } from '../audio/synth';
-import { buildChart, buildSong, type SongData } from './song';
+import { BEAT_SEC, buildChart, buildSong, type SongData } from './song';
 import { classify, judgmentColor, judgmentWeight, MISS_WINDOW, rankFor } from './judge';
 import { LANES, type ChartNote, type GameState, type JudgeCounts, type Judgment } from './types';
 
@@ -89,7 +89,9 @@ export class GameEngine {
   private flashes: Flash[] = [];
   private shake: Shake | null = null;
   private laneFlashAt: number[] = [-999, -999, -999, -999];
+  private melodyPtr = 0;
 
+  private vocalist = document.getElementById('vocalist') as HTMLElement;
   private titleScreen = document.getElementById('title-screen') as HTMLElement;
   private resultScreen = document.getElementById('result-screen') as HTMLElement;
   private hud = document.getElementById('hud') as HTMLElement;
@@ -146,10 +148,13 @@ export class GameEngine {
     this.flashes = [];
     this.shake = null;
     this.laneFlashAt = [-999, -999, -999, -999];
+    this.melodyPtr = 0;
 
     this.titleScreen.classList.add('hidden');
     this.resultScreen.classList.add('hidden');
     this.hud.classList.remove('hidden');
+    this.vocalist.classList.remove('state-title', 'state-result');
+    this.vocalist.classList.add('state-playing');
 
     this.startTime = this.synth.currentTime + COUNTDOWN_SEC;
     this.synth.scheduleSong(this.song, this.startTime);
@@ -160,6 +165,9 @@ export class GameEngine {
     this.state = 'result';
     this.hud.classList.add('hidden');
     this.resultScreen.classList.remove('hidden');
+    this.vocalist.classList.remove('state-playing', 'singing');
+    this.vocalist.classList.add('state-result');
+    this.vocalist.style.transform = '';
 
     (document.getElementById('result-score') as HTMLElement).textContent = String(this.score);
     (document.getElementById('result-rank') as HTMLElement).textContent = rankFor(this.score / MAX_SCORE);
@@ -312,6 +320,7 @@ export class GameEngine {
       }
 
       this.applyShake(now);
+      this.updateVocalist(now);
       this.drawLanes(now);
       this.drawNotes(now);
       this.drawRings(now);
@@ -341,6 +350,20 @@ export class GameEngine {
     const dx = (Math.random() - 0.5) * this.shake.magnitude * frac;
     const dy = (Math.random() - 0.5) * this.shake.magnitude * frac;
     this.ctx.translate(dx, dy);
+  }
+
+  private updateVocalist(now: number): void {
+    const beatPhase = (((now % BEAT_SEC) + BEAT_SEC) % BEAT_SEC) / BEAT_SEC;
+    const bob = Math.sin(beatPhase * Math.PI);
+    this.vocalist.style.transform = `translateY(${-bob * 6}px) scale(${1 + bob * 0.05})`;
+
+    const melody = this.song.melody;
+    while (this.melodyPtr < melody.length - 1 && melody[this.melodyPtr + 1].time <= now) {
+      this.melodyPtr++;
+    }
+    const sinceNote = now - melody[this.melodyPtr].time;
+    const singing = sinceNote >= 0 && sinceNote < 0.16;
+    this.vocalist.classList.toggle('singing', singing);
   }
 
   private checkAutoMiss(now: number): void {

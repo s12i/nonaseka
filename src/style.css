@@ -189,3 +189,97 @@ body {
   color: #ffd166;
   min-height: 1.2em;
 }
+
+.vocalist {
+  position: absolute;
+  z-index: 15;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 14px rgba(120, 80, 140, 0.25));
+}
+
+.vocalist svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.vocalist-name {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #9a7fb0;
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+}
+
+.vocalist.state-title {
+  width: 132px;
+  top: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: vocalist-idle-bob 1.6s ease-in-out infinite;
+}
+
+.vocalist.state-result {
+  width: 108px;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: vocalist-idle-bob 1.6s ease-in-out infinite;
+}
+
+.vocalist.state-playing {
+  width: 60px;
+  top: 8px;
+  right: 10px;
+  left: auto;
+}
+
+.vocalist.state-playing .vocalist-name {
+  display: none;
+}
+
+@keyframes vocalist-idle-bob {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-8px);
+  }
+}
+
+.vocalist .mouth-open {
+  opacity: 0;
+}
+
+.vocalist .mouth-closed {
+  opacity: 1;
+}
+
+.vocalist.singing .mouth-open {
+  opacity: 1;
+}
+
+.vocalist.singing .mouth-closed {
+  opacity: 0;
+}
+
+.led-l,
+.led-r {
+  animation: vocalist-led-pulse 0.9s ease-in-out infinite;
+}
+
+.led-r {
+  animation-delay: 0.45s;
+}
+
+@keyframes vocalist-led-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
