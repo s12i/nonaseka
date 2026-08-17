@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>ノナセカ</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="game-canvas"></canvas>
+
+      <section id="title-screen" class="overlay">
+        <h1 class="logo">ノナセカ</h1>
+        <p class="tagline">タップで奏でる、ミニリズムゲーム</p>
+        <button id="start-button" class="primary-button">START</button>
+        <p class="hint">PC: <kbd>D</kbd> <kbd>F</kbd> <kbd>J</kbd> <kbd>K</kbd> キー &nbsp;/&nbsp; スマホ: レーンをタップ</p>
+      </section>
+
+      <section id="result-screen" class="overlay hidden">
+        <h2 class="result-title">RESULT</h2>
+        <div class="rank" id="result-rank">S</div>
+        <div class="score" id="result-score">0</div>
+        <table class="judge-table">
+          <tbody>
+            <tr><td class="j-perfect">PERFECT</td><td id="count-perfect">0</td></tr>
+            <tr><td class="j-great">GREAT</td><td id="count-great">0</td></tr>
+            <tr><td class="j-good">GOOD</td><td id="count-good">0</td></tr>
+            <tr><td class="j-miss">MISS</td><td id="count-miss">0</td></tr>
+            <tr><td>MAX COMBO</td><td id="result-combo">0</td></tr>
+          </tbody>
+        </table>
+        <button id="retry-button" class="primary-button">もう一度あそぶ</button>
+      </section>
+
+      <div id="hud" class="hidden">
+        <div id="hud-score">0</div>
+        <div id="hud-combo"></div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
